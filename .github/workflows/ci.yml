@@ -22,10 +22,10 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install Poetry using snok/install-poetry
+      - name: Install Poetry using snok/install-poetry (version 2.0.13)
         uses: snok/install-poetry@v1
         with:
-          version: '2.1.1'
+          version: '2.0.13'
 
       - name: Install dependencies via Poetry
         run: poetry install --no-interaction --no-root
