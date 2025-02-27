@@ -1,0 +1,22 @@
+name: dbt_instacart_demo
+version: '1.0'
+config-version: 2
+
+# This profile name must match the name used in ~/.dbt/profiles.yml
+profile: dbt_instacart_demo
+
+# Define paths for models, analyses, tests, etc.
+source-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+models:
+  dbt_instacart_demo:
+    staging:
+      materialized: view
+    intermediate:
+      materialized: table
+    marts:
+      materialized: table
