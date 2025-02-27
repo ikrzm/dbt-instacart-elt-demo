@@ -22,10 +22,10 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python -
-          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      - name: Install Poetry using snok/install-poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: '2.1.1'
 
       - name: Install dependencies via Poetry
         run: poetry install --no-interaction --no-root
