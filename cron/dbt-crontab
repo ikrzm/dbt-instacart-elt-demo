@@ -1,0 +1,14 @@
+# Run full dbt pipeline daily at 6 AM UTC
+0 6 * * * cd /usr/app/dbt && /usr/app/dbt/scripts/run_dbt.sh full >> /var/log/dbt/cron.log 2>&1
+
+# Run dbt during business hours (every 4 hours, Monday-Friday, 8 AM - 8 PM UTC)
+0 8,12,16,20 * * 1-5 cd /usr/app/dbt && /usr/app/dbt/scripts/run_dbt.sh run >> /var/log/dbt/cron.log 2>&1
+
+# Generate docs after each run (every 4 hours, Monday-Friday)
+30 8,12,16,20 * * 1-5 cd /usr/app/dbt && /usr/app/dbt/scripts/run_dbt.sh docs >> /var/log/dbt/cron.log 2>&1
+
+# Health check every hour
+0 * * * * cd /usr/app/dbt && /usr/app/dbt/scripts/health_check.sh >> /var/log/dbt/cron.log 2>&1
+
+# Weekly cleanup of old logs (keep last 30 days)
+0 2 * * 0 find /var/log/dbt -name "*.log" -mtime +30 -delete >> /var/log/dbt/cron.log 2>&1

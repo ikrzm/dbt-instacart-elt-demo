@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  dbt-runner:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: dbt-runner
+    environment:
+      - SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}
+      - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+      - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+      - SNOWFLAKE_ROLE=${SNOWFLAKE_ROLE}
+      - SNOWFLAKE_DATABASE=${SNOWFLAKE_DATABASE}
+      - SNOWFLAKE_WAREHOUSE=${SNOWFLAKE_WAREHOUSE}
+    volumes:
+      - ./:/usr/app/dbt
+      - dbt_docs:/usr/app/dbt/target
+    working_dir: /usr/app/dbt
+    command: tail -f /dev/null  # Keep container running
+    networks:
+      - dbt-network
+
+  dbt-scheduler:
+    build: 
+      context: .
+      dockerfile: Dockerfile.scheduler
+    container_name: dbt-scheduler
+    environment:
+      - SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}
+      - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+      - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+      - SNOWFLAKE_ROLE=${SNOWFLAKE_ROLE}
+      - SNOWFLAKE_DATABASE=${SNOWFLAKE_DATABASE}
+      - SNOWFLAKE_WAREHOUSE=${SNOWFLAKE_WAREHOUSE}
+    volumes:
+      - ./:/usr/app/dbt
+      - dbt_docs:/usr/app/dbt/target
+    working_dir: /usr/app/dbt
+    depends_on:
+      - dbt-runner
+    networks:
+      - dbt-network
+
+  dbt-docs:
+    image: nginx:alpine
+    container_name: dbt-docs
+    ports:
+      - "8080:80"
+    volumes:
+      - dbt_docs:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - dbt-runner
+    networks:
+      - dbt-network
+    restart: unless-stopped
+
+volumes:
+  dbt_docs:
+    driver: local
+
+networks:
+  dbt-network:
+    driver: bridge
