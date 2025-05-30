@@ -3,7 +3,7 @@
 .env.local
 .env.production
 *.pem
-profiles.yml
+
 
 # dbt generated files
 target/
