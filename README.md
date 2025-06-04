@@ -1,4 +1,5 @@
 # dbt Instacart Demo Project
+![dbt_architecture_diagram](https://github.com/user-attachments/assets/d851731c-c6ae-4a57-8932-98e585e109d7)
 
 A practical dbt project demonstrating how to transform raw Instacart e-commerce data into analytics-ready models on Snowflake. This project leverages the modern ELT approach—loading raw data into a cloud data warehouse and transforming it using dbt. Dependencies are managed with Poetry, and the project integrates CI/CD via GitHub Actions to automatically test and build dbt models.
 
